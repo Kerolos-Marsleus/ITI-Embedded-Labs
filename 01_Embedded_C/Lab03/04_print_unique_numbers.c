@@ -7,7 +7,7 @@ void read_array(int *arr, int size);
 void print_unique(const int *arr, int size);
 
 int main(void) {
-    printf("Enter the size of the array\n");
+    printf("Enter the size of the array : ");
     int size = read_size();
     int arr[MAX_ELEMENTS];
 
@@ -41,8 +41,7 @@ int read_size(void){
             continue;
         }
         return data;
-    }
-    
+    } 
 }
 
 void read_array(int *arr, int size){

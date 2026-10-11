@@ -16,7 +16,7 @@ void reverse_array(int* arr, int size);
 int count_duplicates(const int *arr, int size);
 
 int main(void) {
-    printf("Enter the size of the array\n");
+    printf("Enter the size of the array : ");
     int size = read_size();
     int arr[MAX_ELEMENTS];
     read_array(arr, size);
@@ -74,9 +74,8 @@ void sort_array(int *arr, int size){
             break;
         }
     }
-    int largest_index = 0;
     for(int i = 0; i < size - 1; i++){
-        largest_index= i;
+        int largest_index= i;
         for(int j = i+1; j<size; j++){
             if(arr[j] > arr[largest_index]){
                 largest_index = j;
