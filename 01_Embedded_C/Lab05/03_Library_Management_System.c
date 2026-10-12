@@ -25,7 +25,7 @@ void print_menu();
 int add_book(struct Book *storage, int* book_count);
 void display_the_count_for_each_category(struct Book *storage, const int* book_count);
 void search_by_title_or_author(struct Book *storage, const int* book_count); 
-
+void change_status(struct Book *storage, const int* book_count);
 
 int main(void) {
     static struct Book storage[MAX_BOOKS_STORAGE];
@@ -44,7 +44,7 @@ int main(void) {
             search_by_title_or_author(storage,&book_count);
             break;
         case CHANGE_STATUS:
-            
+            change_status(storage, &book_count);
             break;
         case COUNT_BOOKS:
             display_the_count_for_each_category(storage, &book_count);
@@ -204,4 +204,25 @@ void search_by_title_or_author(struct Book *storage, const int* book_count){
         printf("Not found\n");
     }
 }
+
+void change_status(struct Book *storage, const int* book_count){
+    printf("Enter the title : ");
+    char str[STRING_SIZE];
+    const char* status_name[NUMBER_OF_BOOK_STATUS] = {"AVAILABLE", "ISSUED", "RETURN"};
+    read_sentence(str);
+    int found = 0;
+    for(int i = 0; i < *(book_count); i++){
+        if(strcmp(str,storage[i].title) == 0){
+            found = 1;
+            printf("changing the status from %s to : \n",status_name[storage[i].status]);
+            printf("1.AVAILABLE\n2.ISSUED\n3.RETURN\n");
+            storage[i].status = read_in_range(1, NUMBER_OF_BOOK_STATUS) - 1;
+            return ;
+        }
+    }
+    if(found == 0){
+        printf("Not found\n");
+    }
+}
+
 
