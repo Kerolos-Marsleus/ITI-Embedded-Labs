@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #define STRING_SIZE 30
 #define MAX_BOOKS_STORAGE 30
@@ -22,8 +23,8 @@ int read_sentence(char *str);
 int read_in_range(int min, int max);
 void print_menu();
 int add_book(struct Book *storage, int* book_count);
-
-
+void display_the_count_for_each_category(struct Book *storage, const int* book_count);
+void search_by_title_or_author(struct Book *storage, const int* book_count); 
 
 
 int main(void) {
@@ -40,13 +41,13 @@ int main(void) {
             status = add_book(storage, &book_count);
             break;
         case SEARCH_BY_AUTHOR:
-            
+            search_by_title_or_author(storage,&book_count);
             break;
         case CHANGE_STATUS:
             
             break;
         case COUNT_BOOKS:
-            
+            display_the_count_for_each_category(storage, &book_count);
             break;
         default:
             break;
@@ -162,3 +163,45 @@ int add_book(struct Book *storage, int* book_count){
     }
     return 0;
 }
+
+void display_the_count_for_each_category(struct Book *storage, const int* book_count){
+    int category_count[CATEGORY_COUNT] = {0};
+    for(int i = 0; i < *(book_count); i++){
+        category_count[storage[i].category]++;
+    }
+    const char* category_name[CATEGORY_COUNT] = {"FICTION", "SCIENCE", "HISTORY", "POETRY"};
+    for(int i = 0; i < CATEGORY_COUNT; i++){
+        printf("there are %d of type %s\n",category_count[i], category_name[i]);
+    }
+}
+
+void search_by_title_or_author(struct Book *storage, const int* book_count){
+    printf("1.Search by title\n2.search by author\n");
+    int res = read_in_range(1,2);
+    int found = 0;
+    if(res == 1){
+        printf("Enter the name of the title : ");
+        char str[STRING_SIZE];
+        read_sentence(str);
+        for(int i = 0; i < *(book_count); i++){
+            if(strcmp(str, storage[i].title) == 0){
+                found = 1;
+                printf("%s\n",storage[i].author);
+            }
+        }
+    }else if(res == 2){
+         printf("Enter the name of the Author : ");
+        char str[STRING_SIZE];
+        read_sentence(str);
+        for(int i = 0; i < *(book_count); i++){
+            if(strcmp(str, storage[i].author) == 0){
+                found = 1;
+                printf("%s\n",storage[i].title);
+            }
+        }
+    }
+    if(found == 0){
+        printf("Not found\n");
+    }
+}
+
