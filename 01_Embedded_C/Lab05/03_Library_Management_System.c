@@ -53,10 +53,6 @@ int main(void) {
             break;
         }
     }while(option != EXIT);
-    
-    
-
-
     return 0;
 }
 
