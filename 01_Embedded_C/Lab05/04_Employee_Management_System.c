@@ -24,6 +24,8 @@ struct Employee{
     enum EmployeeType type;
 };
 
+int next_id = 0;
+
 void clear_input_buffer(void);
 int read_int(void);
 double read_double(void);
@@ -32,6 +34,7 @@ int read_in_range(int min, int max);
 void print_menu(void);
 int index_of_ID(const struct Employee* storage,  const int* employee_count, int id);
 void search_employee_by_id(const struct Employee* storage,  const int* employee_count, int id);
+void add_employee(struct Employee* storage, int* employee_count);
 int main(void) {
     static struct Employee storage[MAX_EMPLOYEE_STORAGE];
     int employee_count = 0;
@@ -163,6 +166,33 @@ void search_employee_by_id(const struct Employee* storage,  const int* employee_
             printf("Employee pay : %0.2lf/hour\n",storage[index].pay.hourly_rate);
         }
 
+    }
+}
+void add_employee(struct Employee* storage, int* employee_count){
+    if(*employee_count < MAX_EMPLOYEE_STORAGE ){
+        printf("Enter the Name : ");
+        int status = read_sentence(storage[*employee_count].name);
+        if (status == -1){
+            printf("Invalid input\n");
+            return ;
+        }
+        storage[*employee_count].id = next_id;
+        next_id++;
+
+        printf("Choose the Department \n");
+        printf("1.ENGINEERING\n2. SALES\n3. MARKETING\n");
+        storage[*employee_count].dep = read_in_range(1, DEPARTMENT_COUNT) - 1;
+        
+        printf("Choose the Employee type \n");
+        printf("1.FULL_TIME\n2. PART_TIME\n3. INTERN\n");
+        storage[*employee_count].type = read_in_range(1, EMPLOYEE_TYPE_COUNT) - 1;
+
+        if(storage[*employee_count].type == FULL_TIME){
+            storage[*employee_count].pay.monthly_Salary = read_double();
+        }else{
+            storage[*employee_count].pay.hourly_rate = read_double();
+        }
+        (*employee_count)++;
     }
 }
 
