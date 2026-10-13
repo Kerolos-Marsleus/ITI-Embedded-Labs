@@ -203,6 +203,7 @@ void add_employee(struct Employee* storage, int* employee_count){
 
 void display_employee(const struct Employee* storage, const int index){
     printf("\nEmployee Name : %s\n",storage[index].name);
+    printf("Employee ID is : %d\n", storage[index].id);
     printf("Employee Department : %s\n",Department_name[storage[index].dep]);
     printf("Employee Type : %s\n",Employee_type_name[storage[index].type]);
     if(storage[index].type == FULL_TIME){
