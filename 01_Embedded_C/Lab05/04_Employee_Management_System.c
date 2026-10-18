@@ -210,7 +210,7 @@ void display_employee(const struct Employee* storage, const int index){
         printf("Employee pay : %0.2lf/month\n",storage[index].pay.monthly_Salary);
     }else{
         printf("Employee pay : %0.2lf/hour\n",storage[index].pay.hourly_rate);
-    }
+    }  
 }
 
 void remove_employee(struct Employee* storage, int* employee_count){
