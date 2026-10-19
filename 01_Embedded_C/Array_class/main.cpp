@@ -10,10 +10,12 @@ class Array{
         size_t size;
         size_t capacity;
         void replace(int i, int j);
+        void reverse_range(size_t from, size_t to);
         void grow();
 
         public:
         Array(size_t cap = DEFAULT_CAP);
+        Array(const Array &second_array);
         ~Array();
         size_t get_size()const ;
         size_t get_capacity()const;
@@ -31,6 +33,9 @@ class Array{
         long sum();
         void Merge(const Array & object);
         void shift_left(size_t n);
+        void shift_right(size_t n);
+        void rotate_left(size_t n);
+        void rotate_right(size_t n);
     };
 
 
@@ -64,6 +69,21 @@ Array::~Array(){
     delete[] array;
 }
 
+Array::Array(const Array& second_array) : 
+    array(new int[second_array.capacity]), size(second_array.size), capacity(second_array.capacity){
+        for(size_t i = 0; i < second_array.get_size(); i++){
+            array[i] = second_array.array[i];
+        }
+}
+
+void Array::reverse_range(size_t from, size_t to){
+    while(from < to){
+        replace(from, to);
+        from++;
+        to--;
+    }
+}
+
 size_t Array::get_size() const {
     return size;
 }
@@ -73,7 +93,7 @@ size_t Array::get_capacity() const {
 }
 
 void Array::Display(){
-    for(int i = 0; i < size; i++){
+    for(size_t i = 0; i < size; i++){
         cout << array[i] << endl;
     }
 }
@@ -87,7 +107,7 @@ void Array::grow(){
         temp = new int[capacity * 2];
         capacity *= 2;
     }
-    for(int i = 0; i < size; i++){
+    for(size_t i = 0; i < size; i++){
         temp[i] = array[i];
     }
     delete[] array;
@@ -145,14 +165,13 @@ void Array::Delete(size_t index){
 }
 
 int Array::Search(int number){
-    for(int i = 0; i < size; i++){
+    for(size_t i = 0; i < size; i++){
         if(array[i] == number){
             return i;
         }
     }
     return -1;
 }
-
 
 int Array::get(size_t index)const{
     if(index >= size){
@@ -216,7 +235,7 @@ void Array::replace(int i, int j){
 
 long Array::sum(){
     long sum = 0;
-    for(int i = 0; i < size; i++){
+    for(size_t i = 0; i < size; i++){
         sum += array[i];
     }
     return sum;
@@ -226,14 +245,14 @@ void Array::Merge(const Array & object){
     while(capacity < size + object.get_size()){
         grow();
     }
-    for(int i = 0; i < object.get_size(); i++){
+    for(size_t i = 0; i < object.get_size(); i++){
         array[i+size] = object.get(i);
     }
     size += object.get_size();
 }
 
 void Array::shift_left(size_t n){
-    int i = 0;
+    size_t i = 0;
     for(i = 0; i + n < size ; i++){
         array[i] = array[i+n];
     }
@@ -243,3 +262,41 @@ void Array::shift_left(size_t n){
     }
 
 }
+
+void Array::shift_right(size_t n){
+    if(n == 0)return;
+    while(size+n > capacity){
+        grow();
+    }
+    size_t temp = size-1+n;
+    while(temp >= n){
+        array[temp] = array[temp-n];
+        temp--;
+    }
+    for(size_t i = 0; i < n; i++){
+        array[i] = 0;
+    }
+    size = size+n;
+}
+
+void Array::rotate_left(size_t n){
+    if(size == 0){
+        cout << "There is no elements in the array" << endl;
+        return;
+    }
+    n = n % size;
+    if(n == 0)return;
+    reverse_range(0,n-1);
+    reverse_range(n,size-1);
+    reverse_range(0,size-1);
+}
+
+void Array::rotate_right(size_t n){
+    if(size == 0){
+        cout << "There is no elements in the array" << endl;
+        return;
+    }
+    n = n % size;
+    rotate_left(size-n);
+}
+
