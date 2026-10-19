@@ -41,27 +41,42 @@ class Array{
 
 
 int main(){
-    Array arr(5);
-    Array arr2(3);
+    Array arr(2);
+    arr.Add(1); arr.Add(2); arr.Add(3);   
+    arr.Display();                        
+
+    arr.Insert(0, 0);     
+    arr.Delete(0);           
+
+    arr.set(1, 9);                        
+    cout << arr.get(1) << '\n';           
+    cout << arr.Search(3) << '\n';        
+
+    int lo, hi;  double avg;
+    arr.min(lo);  arr.max(hi);  arr.Average(avg);
+    cout << lo << ' ' << hi << ' ' << arr.sum() << ' ' << avg << '\n';  // 1 9 13 4.33333
+
+    arr.reverse();        
+    arr.Display();  
+    arr.rotate_left(1);   
+    arr.Display();  
+    arr.rotate_right(1);  
+    arr.Display();  
+    arr.shift_right(2);   
+    arr.Display();  
+    arr.shift_left(2);    
+    arr.Display();  
+
+    Array arr2;
+    arr2.Add(7); arr2.Add(8);
+    arr.Merge(arr2);      
+    arr.Display();  
+
     Array b = arr;
-    b.set(0,99);
-    arr.Display();
-    // arr2.Add(7);
-    // arr2.Add(8);
-    // arr2.Add(9);
+    b.set(0, 99);
+    arr.Display();                        
+    b.Display();                          
 
-    // arr.Add(1);
-    // arr.Add(2);
-    // arr.Add(3);
-    // arr.Add(4);
-
-    // arr.Display();
-    // arr.Add(19);
-    // arr.Add(10);
-
-    // cout << "size : " <<  arr.get_size() << endl;
-    // cout << "Capacity : " << arr.get_capacity() << endl;
-    // arr.Insert(2,11);
 }
 
 Array::Array(size_t cap) : array(new int[cap]), size(0),capacity(cap){}
