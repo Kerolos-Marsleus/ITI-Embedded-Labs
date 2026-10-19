@@ -19,5 +19,5 @@ void* my_memchr( const void* ptr, int ch, size_t count );
 void* my_memmove( void* dest, const void* src, size_t count );
 char* my_strstr( const char* str, const char* substr );
 size_t my_strcspn( const char *dest, const char *src );
-
+char* my_strtok( char* restrict str, const char* restrict delim );
 #endif

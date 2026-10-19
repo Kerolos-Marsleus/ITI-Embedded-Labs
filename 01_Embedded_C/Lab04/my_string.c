@@ -199,6 +199,28 @@ size_t my_strcspn( const char *dest, const char *src ){
     return i;
 }
 
+char* my_strtok( char* restrict str, const char* restrict delim ){
+    static char* ptr;
+    if(str != NULL){
+        ptr = str;
+    }
+    if(ptr == NULL){
+        return NULL;
+    }
+    while(*ptr != '\0' && my_strchr(delim,*ptr)){
+        ptr++;
+    }
+    if(*ptr == NULL){
+        return NULL;
+    }
+    char* start = ptr;
+    ptr += my_strcspn(ptr, delim);
+    if(*ptr != '\0'){
+        *ptr = '\0';
+        ptr++;
+    }
+    return start;
+}
 
 
 
