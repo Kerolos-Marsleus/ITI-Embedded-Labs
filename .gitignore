@@ -57,3 +57,7 @@ dkms.conf
 
 tempCodeRunnerFile*
 .vscode/
+
+# Build output
+build/
+*.bin
