@@ -4,7 +4,14 @@
 #define RCC_CFGR_SWS_POS    2U
 #define RCC_CFGR_SWS_MASK   0x3U
 #define RCC_CFGR_SW_pos     0U
-#define RCC_CFGR_SW_MASK    3U
+#define RCC_CFGR_SW_MASK    0x3U
+#define RCC_CSR_RSTF_POS    25U
+#define RCC_CSR_RMVF_POS    24U
+#define RCC_CFGR_HPRE_MASK  0xFU
+#define RCC_CFGR_HPRE_POS   4U
+#define RCC_CFGR_PPRE_MASK  0x7U
+#define RCC_CFGR_PPRE1_POS  10U
+#define RCC_CFGR_PPRE2_POS  13U
 
 
 #include <stdint.h>
