@@ -12,6 +12,16 @@
 #define RCC_RST_LOWPOWER    (1U << 6)   /* CSR bit 31: LPWRRSTF */
 
 
+typedef enum
+{
+    RCC_PLLP_DIV2 = 0U,
+    RCC_PLLP_DIV4,
+    RCC_PLLP_DIV6,
+    RCC_PLLP_DIV8,
+    RCC_PLLP_Count
+}RCC_pllP_t;
+
+
 typedef uint32_t RCC_resetCause_t;
 typedef enum
 {
@@ -123,6 +133,17 @@ typedef enum
     RCC_APB_DIV16 = 7U      /* 111 */
 } RCC_apbDiv_t;
 
+
+typedef struct
+{
+    uint32_t M;
+    uint32_t N;
+    uint32_t Q;
+    RCC_pllP_t P;
+    RCC_clk_t  src;
+}RCC_pllCfg_t;
+
+
 RCC_errCode_t RCC_controlClk(RCC_clk_t Clk, RCC_on_off_state_t State);
 RCC_errCode_t RCC_SelectSysClk(RCC_clk_t Clk);
 RCC_errCode_t RCC_GetSystemClk(RCC_clk_t *Ptr_Clk);
@@ -132,4 +153,5 @@ RCC_errCode_t RCC_GetResetCause(RCC_resetCause_t *Ptr_Cause);
 RCC_errCode_t RCC_ClearResetFlags(void);
 RCC_errCode_t RCC_SetAHBPrescaler(RCC_ahbDiv_t Div);
 RCC_errCode_t RCC_SetAPBPrescaler(RCC_bus_t Bus, RCC_apbDiv_t Div);
+RCC_errCode_t RCC_ConfigPLL(const RCC_pllCfg_t *Ptr_CFG);
 #endif  /*RCC_H*/

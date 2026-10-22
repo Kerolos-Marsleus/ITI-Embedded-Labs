@@ -177,3 +177,26 @@ RCC_errCode_t RCC_SetAPBPrescaler(RCC_bus_t Bus, RCC_apbDiv_t Div){
     return RCC_OK;
 }
 
+RCC_errCode_t RCC_ConfigPLL(const RCC_pllCfg_t *Ptr_CFG){
+    if(Ptr_CFG == NULL){
+        return RCC_NULLPTR;
+    }
+    if(Ptr_CFG->Q > 15 || Ptr_CFG->Q <= 1){
+        return RCC_INVALID_ARGUMENT;
+    }
+    if(Ptr_CFG->P >= RCC_PLLP_Count){
+        return RCC_INVALID_ARGUMENT;
+    }
+    if(Ptr_CFG->N >= 433 || Ptr_CFG->N <= 1){
+        return RCC_INVALID_ARGUMENT;
+    }
+    if(Ptr_CFG->M > 63 || Ptr_CFG->M <= 1){
+        return RCC_INVALID_ARGUMENT;
+    }
+    if(Ptr_CFG->src > RCC_HSE){
+        return RCC_INVALID_ARGUMENT;
+    }
+
+    return RCC_OK;
+}
+
