@@ -154,4 +154,5 @@ RCC_errCode_t RCC_ClearResetFlags(void);
 RCC_errCode_t RCC_SetAHBPrescaler(RCC_ahbDiv_t Div);
 RCC_errCode_t RCC_SetAPBPrescaler(RCC_bus_t Bus, RCC_apbDiv_t Div);
 RCC_errCode_t RCC_ConfigPLL(const RCC_pllCfg_t *Ptr_CFG);
+RCC_errCode_t RCC_GETSystemClk_Freq(uint32_t *Ptr_Clk_freq);
 #endif  /*RCC_H*/

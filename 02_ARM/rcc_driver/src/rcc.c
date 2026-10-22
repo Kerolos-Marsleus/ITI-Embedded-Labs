@@ -49,8 +49,8 @@ RCC_errCode_t RCC_SelectSysClk(RCC_clk_t Clk){
         return RCC_NOT_READY;
     }
     uint32_t temp = RCC->CFGR;
-    temp &= ~(RCC_CFGR_SW_MASK << RCC_CFGR_SW_pos);
-    temp |= ((uint32_t) Clk << RCC_CFGR_SW_pos);
+    temp &= ~(RCC_CFGR_SW_MASK << RCC_CFGR_SW_POS);
+    temp |= ((uint32_t) Clk << RCC_CFGR_SW_POS);
     RCC->CFGR = temp;
 
     uint32_t timeout = TIME_LIMIT;
@@ -125,7 +125,6 @@ RCC_errCode_t RCC_CtrlPeriphClk(RCC_periph_t Periph, RCC_on_off_state_t State){
     return RCC_OK;
 }
 
-
 RCC_errCode_t RCC_GetResetCause(RCC_resetCause_t *Ptr_Cause){
     if(Ptr_Cause == NULL){
         return RCC_NULLPTR;
@@ -138,7 +137,6 @@ RCC_errCode_t RCC_ClearResetFlags(void){
     RCC->CSR |= (1U << RCC_CSR_RMVF_POS);
     return RCC_OK;
 }
-
 
 RCC_errCode_t RCC_SetAHBPrescaler(RCC_ahbDiv_t Div){
     if(((uint32_t) Div != RCC_AHB_DIV1) && (((uint32_t) Div  < RCC_AHB_DIV2) || ((uint32_t) Div > RCC_AHB_DIV512))){
@@ -197,6 +195,82 @@ RCC_errCode_t RCC_ConfigPLL(const RCC_pllCfg_t *Ptr_CFG){
         return RCC_INVALID_ARGUMENT;
     }
 
+    uint32_t src_hz = (Ptr_CFG->src == RCC_HSE) ? RCC_HSE_FREQ_HZ : RCC_HSI_FREQ_HZ;
+
+    // test the value of the frequency declared in the rcc_priv.h
+    if((src_hz < RCC_PLL_VCO_IN_MIN_HZ * Ptr_CFG->M) || 
+       (src_hz > RCC_PLL_VCO_IN_MAX_HZ * Ptr_CFG->M)){
+            return RCC_INVALID_ARGUMENT;
+    }
+
+    uint32_t vco_hz = (src_hz / Ptr_CFG->M) * Ptr_CFG->N;
+    if((vco_hz < RCC_PLL_VCO_OUT_MIN_HZ) || 
+       (vco_hz > RCC_PLL_VCO_OUT_MAX_HZ)){
+            return RCC_INVALID_ARGUMENT;
+    }
+
+    uint32_t p_div = ((uint32_t) Ptr_CFG->P +1U) * 2U;
+    uint32_t sys_hz= vco_hz / p_div;
+    if((sys_hz > RCC_PLL_MAX_SYS_CLK)){
+            return RCC_INVALID_ARGUMENT;
+    }
+
+    uint32_t usb_hz = vco_hz / Ptr_CFG->Q;
+    if((usb_hz > RCC_PLL_MAX_USB)){
+            return RCC_INVALID_ARGUMENT;
+    }
+    // check if pll is off, i can't write configuration while it is on
+    if(RCC->CR & (1U << RCC_On_bits[RCC_PLL])){
+        return RCC_BUSY;
+    }
+
+    uint32_t temp = RCC->PLLCFGR;
+    temp &= ~(RCC_PLLCFGR_CLEAR_MASK);
+    temp |= (Ptr_CFG->M << RCC_PLLCFGR_M_POS);
+    temp |= (Ptr_CFG->N << RCC_PLLCFGR_N_POS);
+    temp |= (Ptr_CFG->P << RCC_PLLCFGR_P_POS);
+    temp |= (Ptr_CFG->Q << RCC_PLLCFGR_Q_POS);
+    temp |= (Ptr_CFG->src << RCC_PLLCFGR_SRC_POS);
+    RCC->PLLCFGR = temp;
+
+
+
+    return RCC_OK;
+}
+
+RCC_errCode_t RCC_GETSystemClk_Freq(uint32_t *Ptr_Clk_freq){
+    if(Ptr_Clk_freq == NULL){
+        return RCC_NULLPTR;
+    }
+    RCC_clk_t clk_src;
+    RCC_errCode_t err = RCC_GetSystemClk(&clk_src);
+    if(err != RCC_OK){
+        return err;
+    }
+
+    switch (clk_src)
+    {
+    case RCC_HSI:
+        *Ptr_Clk_freq = RCC_HSI_FREQ_HZ;
+        break;
+    case RCC_HSE:
+        *Ptr_Clk_freq = RCC_HSE_FREQ_HZ;
+        break;
+    case RCC_PLL:
+    {
+        uint32_t temp = RCC->PLLCFGR;
+        uint32_t m = (temp >> RCC_PLLCFGR_M_POS) & RCC_PLLCFGR_M_MASK;
+        uint32_t n = (temp >> RCC_PLLCFGR_N_POS) & RCC_PLLCFGR_N_MASK;
+        uint32_t p = (temp >> RCC_PLLCFGR_P_POS) & RCC_PLLCFGR_P_MASK;
+        uint32_t src = (temp >> RCC_PLLCFGR_SRC_POS) & RCC_PLLCFGR_SRC_MASK;
+        uint32_t src_hz = (src == (uint32_t) RCC_HSE) ? RCC_HSE_FREQ_HZ : RCC_HSI_FREQ_HZ;
+        uint32_t p_div = (p +1U) * 2U;
+        *Ptr_Clk_freq = ((src_hz / m) * n) / p_div;
+        break;
+    }
+    default:
+        return RCC_INVALID_ARGUMENT;
+    }
     return RCC_OK;
 }
 
