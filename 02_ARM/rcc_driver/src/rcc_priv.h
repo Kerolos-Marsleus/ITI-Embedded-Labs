@@ -1,5 +1,6 @@
 #ifndef RCC_PRIV_H
 #define RCC_PRIV_H
+#include <stdint.h>
 
 #define RCC_HSE_FREQ_HZ         25000000U
 #define RCC_HSI_FREQ_HZ         16000000U
@@ -34,7 +35,6 @@
 #define RCC_PLLCFGR_Q_MASK      0xFU 
 
 
-#include <stdint.h>
 typedef struct
 {
     volatile uint32_t CR;
@@ -68,8 +68,14 @@ typedef struct
     volatile uint32_t DCKCFGR;
 } RCC_Reg_t;
 
-#define RCC     ((RCC_Reg_t*) 0x40023800)
 
+
+#ifdef UNIT_TEST
+extern RCC_Reg_t g_fakeRCC;
+#define RCC (&g_fakeRCC)
+#else
+#define RCC     ((RCC_Reg_t*) 0x40023800U)
+#endif
 
 
 #endif /* RCC_PRIV_H */
