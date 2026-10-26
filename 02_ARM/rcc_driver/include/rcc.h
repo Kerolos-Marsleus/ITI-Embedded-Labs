@@ -31,6 +31,7 @@ typedef enum
     RCC_INVALID_ARGUMENT,
     RCC_BUSY,
     RCC_NOT_READY,
+    RCC_UNEXPECTED_STATE,
     RCC_error_count
 }RCC_errCode_t;
 
@@ -144,15 +145,15 @@ typedef struct
 }RCC_pllCfg_t;
 
 
-RCC_errCode_t RCC_controlClk(RCC_clk_t Clk, RCC_on_off_state_t State);
-RCC_errCode_t RCC_SelectSysClk(RCC_clk_t Clk);
-RCC_errCode_t RCC_GetSystemClk(RCC_clk_t *Ptr_Clk);
-RCC_errCode_t RCC_GetClkStatus(RCC_clk_t Clk, RCC_clkStatus_t *ptr_Status);
-RCC_errCode_t RCC_CtrlPeriphClk(RCC_periph_t Periph, RCC_on_off_state_t State);
-RCC_errCode_t RCC_GetResetCause(RCC_resetCause_t *Ptr_Cause);
-RCC_errCode_t RCC_ClearResetFlags(void);
-RCC_errCode_t RCC_SetAHBPrescaler(RCC_ahbDiv_t Div);
-RCC_errCode_t RCC_SetAPBPrescaler(RCC_bus_t Bus, RCC_apbDiv_t Div);
-RCC_errCode_t RCC_ConfigPLL(const RCC_pllCfg_t *Ptr_CFG);
-RCC_errCode_t RCC_GETSystemClk_Freq(uint32_t *Ptr_Clk_freq);
+RCC_errCode_t RCC_enuClkCtrl(RCC_clk_t Clk, RCC_on_off_state_t State);
+RCC_errCode_t RCC_enuSysClkSelect(RCC_clk_t Clk);
+RCC_errCode_t RCC_enuSysClkGet(RCC_clk_t *Ptr_Clk);
+RCC_errCode_t RCC_enuClkStatusGet(RCC_clk_t Clk, RCC_clkStatus_t *ptr_Status);
+RCC_errCode_t RCC_enuPeriphClkCtrl(RCC_periph_t Periph, RCC_on_off_state_t State);
+RCC_errCode_t RCC_enuResetCauseGet(RCC_resetCause_t *Ptr_Cause);
+RCC_errCode_t RCC_enuResetFlagsClear(void);
+RCC_errCode_t RCC_enuAHBPrescalerSet(RCC_ahbDiv_t Div);
+RCC_errCode_t RCC_enuAPBPrescalerSet(RCC_bus_t Bus, RCC_apbDiv_t Div);
+RCC_errCode_t RCC_enuPLLConfig(const RCC_pllCfg_t *Ptr_CFG);
+RCC_errCode_t RCC_enuSysClkFreqGet(uint32_t *Ptr_Clk_freq);
 #endif  /*RCC_H*/

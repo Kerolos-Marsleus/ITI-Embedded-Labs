@@ -8,7 +8,7 @@
 static const uint32_t RCC_On_bits[RCC_CLK_COUNT] = {0U, 16U, 24U};
 
 
-RCC_errCode_t RCC_controlClk(RCC_clk_t Clk, RCC_on_off_state_t State){
+RCC_errCode_t RCC_enuClkCtrl(RCC_clk_t Clk, RCC_on_off_state_t State){
     // error if invalid input
     if( (uint32_t) Clk >= RCC_CLK_COUNT){
         return RCC_INVALID_ARGUMENT;
@@ -45,7 +45,7 @@ RCC_errCode_t RCC_controlClk(RCC_clk_t Clk, RCC_on_off_state_t State){
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_SelectSysClk(RCC_clk_t Clk){
+RCC_errCode_t RCC_enuSysClkSelect(RCC_clk_t Clk){
     if( (uint32_t) Clk >= RCC_CLK_COUNT){
         return RCC_INVALID_ARGUMENT;
     }
@@ -73,7 +73,7 @@ RCC_errCode_t RCC_SelectSysClk(RCC_clk_t Clk){
 
 }
 
-RCC_errCode_t RCC_GetSystemClk(RCC_clk_t *Ptr_Clk){
+RCC_errCode_t RCC_enuSysClkGet(RCC_clk_t *Ptr_Clk){
     if(Ptr_Clk == NULL){
         return RCC_NULLPTR;
     }
@@ -81,7 +81,7 @@ RCC_errCode_t RCC_GetSystemClk(RCC_clk_t *Ptr_Clk){
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_GetClkStatus(RCC_clk_t Clk, RCC_clkStatus_t *ptr_Status){
+RCC_errCode_t RCC_enuClkStatusGet(RCC_clk_t Clk, RCC_clkStatus_t *ptr_Status){
     if( (uint32_t) Clk >= RCC_CLK_COUNT){
         return RCC_INVALID_ARGUMENT;
     }
@@ -92,7 +92,7 @@ RCC_errCode_t RCC_GetClkStatus(RCC_clk_t Clk, RCC_clkStatus_t *ptr_Status){
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_CtrlPeriphClk(RCC_periph_t Periph, RCC_on_off_state_t State){
+RCC_errCode_t RCC_enuPeriphClkCtrl(RCC_periph_t Periph, RCC_on_off_state_t State){
     if((uint32_t)  State >= RCC_STATE_COUNT){
     return RCC_INVALID_ARGUMENT;
     }
@@ -126,12 +126,15 @@ RCC_errCode_t RCC_CtrlPeriphClk(RCC_periph_t Periph, RCC_on_off_state_t State){
     case RCC_DISABLE:
         *reg &= ~(1U << pos);
         break;
+    default:
+        return RCC_INVALID_ARGUMENT;
+        break;
     
     }
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_GetResetCause(RCC_resetCause_t *Ptr_Cause){
+RCC_errCode_t RCC_enuResetCauseGet(RCC_resetCause_t *Ptr_Cause){
     if(Ptr_Cause == NULL){
         return RCC_NULLPTR;
     }
@@ -139,12 +142,12 @@ RCC_errCode_t RCC_GetResetCause(RCC_resetCause_t *Ptr_Cause){
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_ClearResetFlags(void){
+RCC_errCode_t RCC_enuResetFlagsClear(void){
     RCC->CSR |= (1U << RCC_CSR_RMVF_POS);
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_SetAHBPrescaler(RCC_ahbDiv_t Div){
+RCC_errCode_t RCC_enuAHBPrescalerSet(RCC_ahbDiv_t Div){
     if(((uint32_t) Div != RCC_AHB_DIV1) && (((uint32_t) Div  < RCC_AHB_DIV2) || ((uint32_t) Div > RCC_AHB_DIV512))){
         return RCC_INVALID_ARGUMENT;
     }
@@ -155,7 +158,7 @@ RCC_errCode_t RCC_SetAHBPrescaler(RCC_ahbDiv_t Div){
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_SetAPBPrescaler(RCC_bus_t Bus, RCC_apbDiv_t Div){
+RCC_errCode_t RCC_enuAPBPrescalerSet(RCC_bus_t Bus, RCC_apbDiv_t Div){
     if(((uint32_t) Div != RCC_APB_DIV1) && (((uint32_t) Div  < RCC_APB_DIV2) || ((uint32_t) Div > RCC_APB_DIV16))){
         return RCC_INVALID_ARGUMENT;
     }
@@ -172,6 +175,7 @@ RCC_errCode_t RCC_SetAPBPrescaler(RCC_bus_t Bus, RCC_apbDiv_t Div){
         pos = RCC_CFGR_PPRE2_POS;
         break;
     default:
+        return RCC_INVALID_ARGUMENT;
         break;
     }
     uint32_t temp = RCC->CFGR;
@@ -181,7 +185,7 @@ RCC_errCode_t RCC_SetAPBPrescaler(RCC_bus_t Bus, RCC_apbDiv_t Div){
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_ConfigPLL(const RCC_pllCfg_t *Ptr_CFG){
+RCC_errCode_t RCC_enuPLLConfig(const RCC_pllCfg_t *Ptr_CFG){
     if(Ptr_CFG == NULL){
         return RCC_NULLPTR;
     }
@@ -244,12 +248,12 @@ RCC_errCode_t RCC_ConfigPLL(const RCC_pllCfg_t *Ptr_CFG){
     return RCC_OK;
 }
 
-RCC_errCode_t RCC_GETSystemClk_Freq(uint32_t *Ptr_Clk_freq){
+RCC_errCode_t RCC_enuSysClkFreqGet(uint32_t *Ptr_Clk_freq){
     if(Ptr_Clk_freq == NULL){
         return RCC_NULLPTR;
     }
     RCC_clk_t clk_src;
-    RCC_errCode_t err = RCC_GetSystemClk(&clk_src);
+    RCC_errCode_t err = RCC_enuSysClkGet(&clk_src);
     if(err != RCC_OK){
         return err;
     }
@@ -275,7 +279,7 @@ RCC_errCode_t RCC_GETSystemClk_Freq(uint32_t *Ptr_Clk_freq){
         break;
     }
     default:
-        return RCC_INVALID_ARGUMENT;
+        return RCC_UNEXPECTED_STATE;
     }
     return RCC_OK;
 }

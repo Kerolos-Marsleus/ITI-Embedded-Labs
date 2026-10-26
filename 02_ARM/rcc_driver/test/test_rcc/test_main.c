@@ -22,7 +22,7 @@ void tearDown(void)
 
 void test_controlClk_rejects_invalid_clock(void)
 {
-    TEST_ASSERT_EQUAL(RCC_INVALID_ARGUMENT, RCC_controlClk((RCC_clk_t) 7 , RCC_ENABLE));
+    TEST_ASSERT_EQUAL(RCC_INVALID_ARGUMENT, RCC_enuClkCtrl((RCC_clk_t) 7 , RCC_ENABLE));
     // TEST ASSERT (EXPECTED , ACTUAL)
     // IF DIFFER UNITY PRINT FAIL
 }
@@ -31,7 +31,7 @@ void test_controlClk_reject_HSE_if_PLL_run_with_HSE(void)
 {
     g_fakeRCC.PLLCFGR |= ( (uint32_t) RCC_HSE << RCC_PLLCFGR_SRC_POS );
     g_fakeRCC.CFGR = 0x00000008;
-    TEST_ASSERT_EQUAL(RCC_BUSY,RCC_controlClk(RCC_HSE, RCC_DISABLE));
+    TEST_ASSERT_EQUAL(RCC_BUSY,RCC_enuClkCtrl(RCC_HSE, RCC_DISABLE));
 }
 
 int main(void)

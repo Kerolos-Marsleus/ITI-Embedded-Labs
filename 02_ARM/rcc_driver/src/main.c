@@ -20,8 +20,8 @@ int main(void){
     "RCC_BUSY",
     "RCC_NOT_READY",
 };
-    error = RCC_CtrlPeriphClk(RCC_GPIOC, RCC_ENABLE);
-    error = RCC_CtrlPeriphClk(RCC_GPIOA, RCC_ENABLE);
+    error = RCC_enuPeriphClkCtrl(RCC_GPIOC, RCC_ENABLE);
+    error = RCC_enuPeriphClkCtrl(RCC_GPIOA, RCC_ENABLE);
 
     GPIOC_MODER |= (1U << 26);
     GPIOC_MODER &= ~(1U << 27);
