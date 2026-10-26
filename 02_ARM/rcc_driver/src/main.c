@@ -12,14 +12,7 @@
 #define GPIOC_BSRR      (*(volatile uint32_t *)(GPIOC_BASE + 0x18))
 int main(void){
     RCC_errCode_t error;
-    char* error_str[RCC_error_count] = {
-    "RCC_OK" ,
-    "RCC_TIMEOUT",
-    "RCC_NULLPTR",
-    "RCC_INVALID_ARGUMENT",
-    "RCC_BUSY",
-    "RCC_NOT_READY",
-};
+
     error = RCC_enuPeriphClkCtrl(RCC_GPIOC, RCC_ENABLE);
     error = RCC_enuPeriphClkCtrl(RCC_GPIOA, RCC_ENABLE);
 
