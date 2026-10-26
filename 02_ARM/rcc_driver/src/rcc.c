@@ -6,6 +6,8 @@
 #define TIME_LIMIT  50000U
 
 static const uint32_t RCC_On_bits[RCC_CLK_COUNT] = {0U, 16U, 24U};
+
+
 RCC_errCode_t RCC_controlClk(RCC_clk_t Clk, RCC_on_off_state_t State){
     // error if invalid input
     if( (uint32_t) Clk >= RCC_CLK_COUNT){
@@ -15,10 +17,14 @@ RCC_errCode_t RCC_controlClk(RCC_clk_t Clk, RCC_on_off_state_t State){
         return RCC_INVALID_ARGUMENT;
     }
 
-    // setting up the clock
+    // disabling a running clk --> busy
     if((uint32_t)  State == RCC_DISABLE){
         uint32_t SWS = (RCC->CFGR >> RCC_CFGR_SWS_POS) & RCC_CFGR_SWS_MASK;
-        if(SWS ==(uint32_t)  Clk){ return RCC_BUSY; }
+        uint32_t PLL_SRC = (((RCC->PLLCFGR) >> RCC_PLLCFGR_SRC_POS) & RCC_PLLCFGR_SRC_MASK);
+        if(SWS ==(uint32_t)  Clk || ((SWS == RCC_PLL) && (Clk == PLL_SRC)))
+        { 
+            return RCC_BUSY; 
+        }
     }
     if(State == RCC_ENABLE){
         RCC->CR |= (1U << RCC_On_bits[Clk]);

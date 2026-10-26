@@ -27,10 +27,17 @@ void test_controlClk_rejects_invalid_clock(void)
     // IF DIFFER UNITY PRINT FAIL
 }
 
+void test_controlClk_reject_HSE_if_PLL_run_with_HSE(void)
+{
+    g_fakeRCC.PLLCFGR |= ( (uint32_t) RCC_HSE << RCC_PLLCFGR_SRC_POS );
+    g_fakeRCC.CFGR = 0x00000008;
+    TEST_ASSERT_EQUAL(RCC_BUSY,RCC_controlClk(RCC_HSE, RCC_DISABLE));
+}
 
 int main(void)
 {
     UNITY_BEGIN();
     RUN_TEST(test_controlClk_rejects_invalid_clock);
+    RUN_TEST(test_controlClk_reject_HSE_if_PLL_run_with_HSE);
     return UNITY_END();
 }
