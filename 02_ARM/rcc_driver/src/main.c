@@ -1,4 +1,5 @@
 #include "rcc.h"
+#include "gpio.h"
 #include <stdio.h>
 
 #define GPIOC_BASE      0x40020800U
@@ -16,25 +17,22 @@ int main(void){
     error = RCC_enuPeriphClkCtrl(RCC_GPIOC, RCC_ENABLE);
     error = RCC_enuPeriphClkCtrl(RCC_GPIOA, RCC_ENABLE);
 
-    GPIOC_MODER |= (1U << 26);
-    GPIOC_MODER &= ~(1U << 27);
+    GPIO_enuCfgPinMode(GPIO_PORTC, GPIO_PIN13,GPIO_MODE_OUTPUT);
 
-    GPIOA_MODER &= ~(3U << 0);
+    GPIO_enuCfgPinMode(GPIO_PORTA,GPIO_PIN0, GPIO_MODE_INPUT);
     GPIOA_PUPDR |= (1U << 0);
     GPIOA_PUPDR &= ~(1U << 1);
 
     while(1){
-        // GPIOC_BSRR = (1U << (13U + 16U));
-        // for(volatile uint32_t i = 0U; i < 500000U; i++){}
 
-        // GPIOC_BSRR = (1U << 13U);
-        // for(volatile uint32_t i = 0U; i < 500000U; i++){}
-
-        if(GPIOA_IDR & (1)){
-            GPIOC_BSRR = (1U << 13U);
+        GPIO_pinState_t state;
+        GPIO_enuPinRead(GPIO_PORTA,GPIO_PIN0,&state);
+        if(state){
+            GPIO_enuPinWrite(GPIO_PORTC,GPIO_PIN13, GPIO_PIN_STATE_HIGH);
         }else{
-            GPIOC_BSRR = (1U << (13U + 16U));
+            GPIO_enuPinWrite(GPIO_PORTC,GPIO_PIN13, GPIO_PIN_STATE_LOW);
         }
     
     }
 }
+
