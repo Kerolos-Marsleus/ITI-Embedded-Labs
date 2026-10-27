@@ -81,4 +81,5 @@ GPIO_errCode_t GPIO_enuCfgPinMode(GPIO_port_t port, GPIO_pin_t pin, GPIO_mode_t 
 GPIO_errCode_t GPIO_enuPinWrite(GPIO_port_t port, GPIO_pin_t pin,GPIO_pinState_t state);
 GPIO_errCode_t GPIO_enuPinRead(GPIO_port_t port, GPIO_pin_t pin, GPIO_pinState_t* state);
 GPIO_errCode_t GPIO_enuCfgSpeed(GPIO_port_t port, GPIO_pin_t pin,GPIO_speed_t speed);
+GPIO_errCode_t GPIO_enuCfgPUPD(GPIO_port_t port, GPIO_pin_t pin,GPIO_pupd_t pupd);
 #endif  /*GPIO_H*/

@@ -25,7 +25,7 @@ GPIO_errCode_t GPIO_enuCfgPinMode(GPIO_port_t port, GPIO_pin_t pin, GPIO_mode_t 
     }else if((uint32_t) mode >= GPIO_MODE_COUNT){
         error = GPIO_INVALID_ARGUMENT;
     }else{  
-        GPIO_vWrite2BitField(&(GPIO_ports[port]->MODER),pin,mode);
+        GPIO_vWrite2BitField(&(GPIO_ports[port]->MODER),(uint32_t)pin,(uint32_t)mode);
         error = GPIO_OK;
     }
 
@@ -76,7 +76,23 @@ GPIO_errCode_t GPIO_enuCfgSpeed(GPIO_port_t port, GPIO_pin_t pin,GPIO_speed_t sp
     }else if((uint32_t) speed >= GPIO_SPEED_COUNT){
         error = GPIO_INVALID_ARGUMENT;
     }else{
-        GPIO_vWrite2BitField(&(GPIO_ports[port]->OSPEEDR), pin, speed);
+        GPIO_vWrite2BitField(&(GPIO_ports[port]->OSPEEDR), (uint32_t)pin, (uint32_t)speed);
+        error = GPIO_OK;
+    }
+    return error;
+}
+
+
+GPIO_errCode_t GPIO_enuCfgPUPD(GPIO_port_t port, GPIO_pin_t pin,GPIO_pupd_t pupd){
+    GPIO_errCode_t error;
+    if((uint32_t) port >= GPIO_PORT_COUNT){
+        error = GPIO_INVALID_ARGUMENT;
+    }else if( (uint32_t) pin >= GPIO_PIN_COUNT){
+        error = GPIO_INVALID_ARGUMENT;
+    }else if((uint32_t) pupd >= GPIO_PUPD_COUNT){
+        error = GPIO_INVALID_ARGUMENT;
+    }else{
+        GPIO_vWrite2BitField(&(GPIO_ports[port]->PUPDR),(uint32_t) pin, (uint32_t) pupd);
         error = GPIO_OK;
     }
     return error;
