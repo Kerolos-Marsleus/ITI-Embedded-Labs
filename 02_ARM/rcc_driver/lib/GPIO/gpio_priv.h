@@ -3,7 +3,7 @@
 #include "gpio.h"
 #include <stdint.h>
 
-#define GPIO_MODER_MASK                 0x3U
+#define GPIO_2BIT_FIELD_MASK            0x3U
 #define GPIO_2BIT_FIELD_WIDTH           2U
 #define GPIO_BSRR_RESET_OFFSET          16U
 #define GPIO_IDR_MASK                   0x1U

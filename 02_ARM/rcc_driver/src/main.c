@@ -23,6 +23,7 @@ int main(void){
     GPIOA_PUPDR |= (1U << 0);
     GPIOA_PUPDR &= ~(1U << 1);
 
+    GPIO_enuCfgSpeed(GPIO_PORTC,GPIO_PIN13, GPIO_SPEED_HIGH);
     while(1){
 
         GPIO_pinState_t state;

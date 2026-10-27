@@ -7,6 +7,15 @@
 
 static GPIO_Reg_t *const GPIO_ports[GPIO_PORT_COUNT] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOH};
 
+static void GPIO_vWrite2BitField(volatile uint32_t *reg, uint32_t pin, uint32_t value){
+    uint32_t loc_u32_temp = *reg;
+    uint32_t loc_u32_pos =  pin * GPIO_2BIT_FIELD_WIDTH;
+    loc_u32_temp &= ~(GPIO_2BIT_FIELD_MASK << loc_u32_pos);
+    loc_u32_temp |= (value << loc_u32_pos);
+    *reg = loc_u32_temp;
+}
+
+
 GPIO_errCode_t GPIO_enuCfgPinMode(GPIO_port_t port, GPIO_pin_t pin, GPIO_mode_t mode){
     GPIO_errCode_t error;
     if((uint32_t) port >= GPIO_PORT_COUNT){
@@ -16,11 +25,7 @@ GPIO_errCode_t GPIO_enuCfgPinMode(GPIO_port_t port, GPIO_pin_t pin, GPIO_mode_t 
     }else if((uint32_t) mode >= GPIO_MODE_COUNT){
         error = GPIO_INVALID_ARGUMENT;
     }else{  
-        uint32_t loc_u32_temp = GPIO_ports[port]->MODER;
-        uint32_t loc_u32_pos = (uint32_t) pin * GPIO_2BIT_FIELD_WIDTH;
-        loc_u32_temp &= ~(GPIO_MODER_MASK << loc_u32_pos);
-        loc_u32_temp |= ((uint32_t)mode << loc_u32_pos);
-        GPIO_ports[port]->MODER = loc_u32_temp;
+        GPIO_vWrite2BitField(&(GPIO_ports[port]->MODER),pin,mode);
         error = GPIO_OK;
     }
 
@@ -62,5 +67,19 @@ GPIO_errCode_t GPIO_enuPinRead(GPIO_port_t port, GPIO_pin_t pin, GPIO_pinState_t
     return error;
 }
 
+GPIO_errCode_t GPIO_enuCfgSpeed(GPIO_port_t port, GPIO_pin_t pin,GPIO_speed_t speed){
+    GPIO_errCode_t error;
+    if((uint32_t) port >= GPIO_PORT_COUNT){
+        error = GPIO_INVALID_ARGUMENT;
+    }else if( (uint32_t) pin >= GPIO_PIN_COUNT){
+        error = GPIO_INVALID_ARGUMENT;
+    }else if((uint32_t) speed >= GPIO_SPEED_COUNT){
+        error = GPIO_INVALID_ARGUMENT;
+    }else{
+        GPIO_vWrite2BitField(&(GPIO_ports[port]->OSPEEDR), pin, speed);
+        error = GPIO_OK;
+    }
+    return error;
+}
 
 
