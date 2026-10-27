@@ -169,3 +169,35 @@ GPIO_errCode_t GPIO_enuPinInit(const GPIO_pinCfg_t *Ptr_Cfg){
     }
     return error;
 }
+
+GPIO_errCode_t GPIO_enuPortWrite(GPIO_port_t port, uint16_t value){
+    GPIO_errCode_t error;
+    if((uint32_t) port >= GPIO_PORT_COUNT)
+    {
+        error = GPIO_INVALID_ARGUMENT;
+    }else
+    {
+        GPIO_ports[port]->ODR = value;
+        error = GPIO_OK;
+    }
+    return error;
+}
+
+
+GPIO_errCode_t GPIO_enuPortRead(GPIO_port_t port, uint16_t *value){
+    GPIO_errCode_t error;
+    if((uint32_t) port >= GPIO_PORT_COUNT)
+    {
+        error = GPIO_INVALID_ARGUMENT;
+    }
+    else if(value == NULL)
+    {
+        error = GPIO_NULLPTR;
+    }
+    else
+    {
+        *value = (uint16_t) ((GPIO_ports[port]->IDR) & 0xFFFFU);
+        error = GPIO_OK;
+    }
+    return error;
+}
