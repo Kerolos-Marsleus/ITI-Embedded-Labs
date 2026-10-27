@@ -3,10 +3,11 @@
 #include "gpio.h"
 #include <stdint.h>
 
-#define GPIO_2BIT_FIELD_MASK            0x3U
 #define GPIO_2BIT_FIELD_WIDTH           2U
+#define GPIO_4BIT_FIELD_WIDTH           4U
 #define GPIO_BSRR_RESET_OFFSET          16U
 #define GPIO_IDR_MASK                   0x1U
+#define GPIO_AFR_PINS_PER_REG           8U
 
 #define GPIOA_BASE   0x40020000U
 #define GPIOB_BASE   0x40020400U

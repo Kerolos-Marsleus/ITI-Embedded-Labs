@@ -10,6 +10,7 @@ typedef enum{
 }GPIO_errCode_t;
 
 
+
 typedef enum{
     GPIO_MODE_INPUT,
     GPIO_MODE_OUTPUT,
@@ -77,9 +78,24 @@ typedef enum
     GPIO_PIN_STATE_COUNT
 } GPIO_pinState_t;
 
+typedef struct
+{
+    GPIO_port_t        port;
+    GPIO_pin_t         pin;
+    GPIO_mode_t        mode;
+    GPIO_outputType_t  outType;
+    GPIO_speed_t       speed;
+    GPIO_pupd_t        pupd;
+    GPIO_af_t          af;         /* used only when mode == ALTERNATE */
+    GPIO_pinState_t    initState;  /* used only when mode == OUTPUT    */
+} GPIO_pinCfg_t;
+
 GPIO_errCode_t GPIO_enuCfgPinMode(GPIO_port_t port, GPIO_pin_t pin, GPIO_mode_t mode);
 GPIO_errCode_t GPIO_enuPinWrite(GPIO_port_t port, GPIO_pin_t pin,GPIO_pinState_t state);
 GPIO_errCode_t GPIO_enuPinRead(GPIO_port_t port, GPIO_pin_t pin, GPIO_pinState_t* state);
 GPIO_errCode_t GPIO_enuCfgSpeed(GPIO_port_t port, GPIO_pin_t pin,GPIO_speed_t speed);
 GPIO_errCode_t GPIO_enuCfgPUPD(GPIO_port_t port, GPIO_pin_t pin,GPIO_pupd_t pupd);
+GPIO_errCode_t GPIO_enuCfgOutType(GPIO_port_t port, GPIO_pin_t pin,GPIO_outputType_t type);
+GPIO_errCode_t GPIO_enuCfgAlternativeFunc(GPIO_port_t port, GPIO_pin_t pin,GPIO_af_t af);
+GPIO_errCode_t GPIO_enuPinInit(const GPIO_pinCfg_t *Ptr_Cfg);
 #endif  /*GPIO_H*/
